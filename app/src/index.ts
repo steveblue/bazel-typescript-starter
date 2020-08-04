@@ -1,4 +1,3 @@
 const el: HTMLDivElement = document.createElement("div");
-el.innerText = "Hello World";
-el.className = "ts1";
+el.innerText = "Bazel Typescript Starter";
 document.body.appendChild(el);
