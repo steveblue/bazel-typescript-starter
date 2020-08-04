@@ -1,0 +1,25 @@
+{
+  "name": "bazel-typescript-starter",
+  "version": "0.1.0",
+  "private": true,
+  "devDependencies": {
+    "@bazel/bazelisk": "latest",
+    "@bazel/buildifier": "latest",
+    "@bazel/ibazel": "latest",
+    "@bazel/rollup": "^2.0.0",
+    "@bazel/terser": "^2.0.0",
+    "@bazel/typescript": "^2.0.0",
+    "@types/node": "^14.0.27",
+    "html-insert-assets": "^0.6.0",
+    "http-server": "^0.11.1",
+    "rollup": "1.20.3",
+    "terser": "4.3.1",
+    "typescript": "^3.9.7"
+  },
+  "scripts": {
+    "build": "bazel build app/src:package",
+    "dev": "ibazel run app/src:devserver",
+    "serve": "http-server bazel-bin/app/src/package -g -o",
+    "test": ""
+  }
+}

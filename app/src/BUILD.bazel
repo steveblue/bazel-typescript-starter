@@ -1,0 +1,55 @@
+load("@build_bazel_rules_nodejs//:index.bzl", "pkg_web")
+load("@npm//@bazel/rollup:index.bzl", "rollup_bundle")
+load("@npm//@bazel/terser:index.bzl", "terser_minified")
+load("@npm//@bazel/typescript:index.bzl", "ts_devserver", "ts_library", "ts_project")
+load("@npm//html-insert-assets:index.bzl", "html_insert_assets")
+load("@npm//http-server:index.bzl", "http_server")
+
+package(default_visibility = ["//visibility:public"])
+
+ts_library(
+    name = "app",
+    tsconfig = ":tsconfig.json",
+    deps = [
+        "@npm//@types"
+    ],
+    srcs = ["index.ts"],
+)
+
+ts_devserver(
+    name = "devserver",
+    deps = [":app"],
+)
+
+rollup_bundle(
+    name = "bundle",
+    entry_point = ":index.ts",
+    deps = [":app"],
+)
+
+terser_minified(
+    name = "bundle.min",
+    src = ":bundle",
+)
+
+_ASSETS = [
+    ":bundle.min",
+]
+
+# Copy index.html to the output folder, adding <script> and <link> tags
+html_insert_assets(
+    name = "inject_tags",
+    outs = ["index.html"],
+    args = [
+        "--out=$@",
+        "--html=$(execpath :index.dev.html)",
+        "--roots=$(RULEDIR)",
+        "--assets",
+    ] + ["$(execpaths %s)" % a for a in _ASSETS],
+    data = [":index.dev.html"] + _ASSETS,
+)
+
+pkg_web(
+    name = "package",
+    srcs = [":inject_tags"] + _ASSETS
+)

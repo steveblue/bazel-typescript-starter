@@ -1,0 +1,8 @@
+node_modules
+dist
+bazel-out
+bazel-testlogs
+bazel-bin
+bazel-bazel-starter
+
+.DS_Store
