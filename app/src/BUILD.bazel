@@ -1,4 +1,5 @@
 load("@build_bazel_rules_nodejs//:index.bzl", "pkg_web")
+load("@io_bazel_rules_sass//:defs.bzl", "sass_binary")
 load("@npm//@bazel/rollup:index.bzl", "rollup_bundle")
 load("@npm//@bazel/terser:index.bzl", "terser_minified")
 load("@npm//@bazel/typescript:index.bzl", "ts_devserver", "ts_library", "ts_project")
@@ -7,6 +8,11 @@ load("@npm//http-server:index.bzl", "http_server")
 
 package(default_visibility = ["//visibility:public"])
 
+sass_binary(
+    name = "scss",
+    src = "styles/styles.scss"
+)
+
 ts_library(
     name = "app",
     tsconfig = ":tsconfig.json",
@@ -14,11 +20,6 @@ ts_library(
         "@npm//@types"
     ],
     srcs = ["index.ts"],
-)
-
-ts_devserver(
-    name = "devserver",
-    deps = [":app"],
 )
 
 rollup_bundle(
@@ -34,9 +35,9 @@ terser_minified(
 
 _ASSETS = [
     ":bundle.min",
+    ":styles/styles.css"
 ]
 
-# Copy index.html to the output folder, adding <script> and <link> tags
 html_insert_assets(
     name = "inject_tags",
     outs = ["index.html"],
@@ -51,5 +52,17 @@ html_insert_assets(
 
 pkg_web(
     name = "package",
-    srcs = [":inject_tags"] + _ASSETS
+    srcs = _ASSETS + [
+        ":assets",
+        "index.html",
+    ],
+)
+
+ts_devserver(
+    name = "devserver",
+    deps = [":app"],
+    static_files = _ASSETS + [
+        "//app/src/assets",
+        ":inject_tags",
+    ],
 )
