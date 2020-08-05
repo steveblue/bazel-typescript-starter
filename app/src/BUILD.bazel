@@ -4,17 +4,17 @@ load("@npm//@bazel/rollup:index.bzl", "rollup_bundle")
 load("@npm//@bazel/terser:index.bzl", "terser_minified")
 load("@npm//@bazel/typescript:index.bzl", "ts_devserver", "ts_library", "ts_project")
 load("@npm//html-insert-assets:index.bzl", "html_insert_assets")
-load("@npm//http-server:index.bzl", "http_server")
 
 package(default_visibility = ["//visibility:public"])
 
 sass_binary(
-    name = "scss",
-    src = "styles/styles.scss"
+    name = "scss-app",
+    src = "styles/styles.scss",
+    sourcemap = False
 )
 
 ts_library(
-    name = "app",
+    name = "ts-app",
     tsconfig = ":tsconfig.json",
     deps = [
         "@npm//@types"
@@ -25,7 +25,7 @@ ts_library(
 rollup_bundle(
     name = "bundle",
     entry_point = ":index.ts",
-    deps = [":app"],
+    deps = [":ts-app"],
 )
 
 terser_minified(
@@ -39,7 +39,7 @@ _ASSETS = [
 ]
 
 html_insert_assets(
-    name = "inject_tags",
+    name = "inject",
     outs = ["index.html"],
     args = [
         "--out=$@",
@@ -51,7 +51,7 @@ html_insert_assets(
 )
 
 pkg_web(
-    name = "package",
+    name = "prod",
     srcs = _ASSETS + [
         ":assets",
         "index.html",
@@ -60,9 +60,9 @@ pkg_web(
 
 ts_devserver(
     name = "devserver",
-    deps = [":app"],
+    deps = [":ts-app"],
     static_files = _ASSETS + [
         "//app/src/assets",
-        ":inject_tags",
+        ":inject",
     ],
 )

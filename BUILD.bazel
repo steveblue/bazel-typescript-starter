@@ -1,4 +1,12 @@
 # Add rules here to build your software
 # See https://docs.bazel.build/versions/master/build-ref.html#BUILD_files
 
+alias(
+    name = "devserver",
+    actual = "//app/src:devserver",
+)
 
+alias(
+    name = "prod",
+    actual = "//app/src:prod",
+)
