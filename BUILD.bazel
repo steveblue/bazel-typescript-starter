@@ -3,10 +3,10 @@
 
 alias(
     name = "devserver",
-    actual = "//app/src:devserver",
+    actual = "//client/src:devserver",
 )
 
 alias(
     name = "prod",
-    actual = "//app/src:prod",
+    actual = "//client/src:prod",
 )

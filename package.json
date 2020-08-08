@@ -17,9 +17,9 @@
     "typescript": "^3.9.7"
   },
   "scripts": {
-    "app:dev": "ibazel run devserver",
-    "app:prod": "bazel build prod",
-    "app:serve": "http-server bazel-bin/app/src/prod -g -o",
+    "client:dev": "ibazel run devserver",
+    "client:prod": "bazel build prod",
+    "client:serve": "http-server bazel-bin/client/src/prod -g -o",
     "test": "bazel test ..."
   }
 }
