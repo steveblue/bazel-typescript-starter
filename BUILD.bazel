@@ -2,11 +2,21 @@
 # See https://docs.bazel.build/versions/master/build-ref.html#BUILD_files
 
 alias(
-    name = "devserver",
-    actual = "//client/src:devserver",
+    name = "dev-client",
+    actual = "//client/src:ts-server",
 )
 
 alias(
-    name = "prod",
-    actual = "//client/src:prod",
+    name = "dev-server",
+    actual = "//server/src:ts-server",
+)
+
+alias(
+    name = "client-package",
+    actual = "//client/src:package",
+)
+
+alias(
+    name = "server-package",
+    actual = "//server/src:package",
 )

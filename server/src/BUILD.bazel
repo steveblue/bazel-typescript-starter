@@ -1,0 +1,23 @@
+package(default_visibility = ["//visibility:public"])
+
+load("@npm//@bazel/typescript:index.bzl", "ts_config", "ts_devserver", "ts_library")
+load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
+
+
+ts_library(
+    name = "ts-server",
+    tsconfig = ":tsconfig.json",
+    deps = [
+        "@npm//@types"
+    ],
+    srcs = glob(["*.ts"]),
+)
+
+nodejs_binary(
+    name = "package",
+    data = [
+        ":ts-server"
+    ],
+    node_modules = "@npm//:node_modules",
+    entry_point = "index.ts",
+)

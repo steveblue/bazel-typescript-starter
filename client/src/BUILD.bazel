@@ -7,6 +7,11 @@ load("@npm//html-insert-assets:index.bzl", "html_insert_assets")
 
 package(default_visibility = ["//visibility:public"])
 
+_ASSETS = [
+    ":bundle.min",
+    ":styles/styles.css"
+]
+
 sass_binary(
     name = "scss-client",
     src = "styles/styles.scss",
@@ -19,7 +24,7 @@ ts_library(
     deps = [
         "@npm//@types"
     ],
-    srcs = ["index.ts"],
+    srcs = glob(["*.ts"]),
 )
 
 rollup_bundle(
@@ -32,11 +37,6 @@ terser_minified(
     name = "bundle.min",
     src = ":bundle",
 )
-
-_ASSETS = [
-    ":bundle.min",
-    ":styles/styles.css"
-]
 
 html_insert_assets(
     name = "inject",
@@ -51,7 +51,7 @@ html_insert_assets(
 )
 
 pkg_web(
-    name = "prod",
+    name = "package",
     srcs = _ASSETS + [
         ":assets",
         "index.html",
@@ -59,7 +59,7 @@ pkg_web(
 )
 
 ts_devserver(
-    name = "devserver",
+    name = "ts-server",
     deps = [":ts-client"],
     static_files = _ASSETS + [
         "//client/src/assets",
